@@ -1,0 +1,67 @@
+import tkinter as tk
+import requests
+from tkinter import font
+
+
+HEIGHT = 500
+WIDTH = 600
+
+#api.openweathermap.org/data/2.5/forecast?q=London,us&mode=xml
+
+#83da08e2fb9037e1763e9b36df91935b
+
+# def test_function(entry):
+    # print("Button Pressed !!!", entry)
+	
+	
+def get_weather(city):
+   weather_key = ' '
+   url = ' '
+   params = {'APPID': weather_key, 'q': city, 'units': 'metric'}
+   response = requests.get(url, params=params)
+   weather = response.json()
+   label['text'] = format_response(weather)
+   # print(weather['name'])
+   # print(weather['weather'][0]['description'])   
+   # print(weather['main']['temp'])   
+
+def format_response(weather):
+  try:
+      name = weather['name']
+      desc = weather['weather'][0]['description']   
+      temp = weather['main']['temp']   
+
+      final_str = 'City: %s \nConditions: %s \nTemperature(*C): %s' %(name, desc, temp)
+  except:	
+   
+      final_str = 'There is was a problem retrieving that information'
+
+  return final_str
+
+  
+root = tk.Tk()
+
+
+canvas = tk.Canvas(root,height = HEIGHT, width = WIDTH)
+canvas.pack()
+
+
+frame = tk.Frame(root, bg = '#80C1FF',bd = 5)
+frame.place(relx = 0.5, rely = 0.1, relwidth = 0.75, relheight = 0.1, anchor = 'n')
+
+
+entry = tk.Entry(frame,font = 40)
+entry.place(relheight = 1, relwidth = 0.65)
+
+
+
+button = tk.Button(frame, text = "Get Weather", font = 40, command = lambda: get_weather(entry.get())) 
+button.place(relx = 0.7,relheight = 1, relwidth = 0.3)
+
+lower_frame = tk.Frame(root,bg = '#80C1FF',bd = 10)
+lower_frame.place(relx = 0.5, rely = 0.25, relwidth = 0.75, relheight = 0.6, anchor = 'n')
+
+label = tk.Label(lower_frame, font =('Courier', 18),anchor = 'nw', justify = 'left', bd = 4)
+label.place(relheight = 1, relwidth = 1) 
+
+root.mainloop()
